@@ -19,27 +19,26 @@ defmodule MyBroadwayApp.Application do
   defp get_or_generate_users do
     users = MyBroadwayApp.UserStorage.get_all_users()
 
-    case users do
-      [] ->
-        Logger.info("Generating new users...")
-        generate_new_users()
-        ^users = MyBroadwayApp.UserStorage.get_all_users()
-      _ ->
-        Logger.info("Users already generated.")
+    if users == [] do
+      Logger.info("Generating new users...")
+      generate_new_users()
+      ^users = MyBroadwayApp.UserStorage.get_all_users()
+    else
+      Logger.info("Users already generated.")
     end
 
     users
   end
 
   defp generate_new_users do
-    for _ <- 1..50 do
+    Enum.each(1..50, fn _ ->
       id = :crypto.strong_rand_bytes(8) |> Base.encode16()
       first_name = Faker.Person.first_name()
       last_name = Faker.Person.last_name()
       email = "#{String.downcase(first_name)}_#{String.downcase(last_name)}@example.com"
       balance = 0
       MyBroadwayApp.UserStorage.add_user(id, email, balance)
-    end
+    end)
   end
 
   defp publish_events(users) do
