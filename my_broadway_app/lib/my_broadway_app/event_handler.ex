@@ -18,26 +18,55 @@ defmodule MyBroadwayApp.EventHandler do
   end
 
   defp handle_finishing_event(event, balance_change) do
-    # Process.sleep(20_000)
-
     IO.puts("Handling #{event.__struct__.__name__} event for user #{event.user_id}")
 
-    with {:ok, user} <- MyBroadwayApp.UserStorage.get_user(event.user_id),
-         {:ok, updated_user} <- MyBroadwayApp.UserStorage.update_user(event.user_id, user.email, user.balance + balance_change) do
-      IO.puts("User's #{event.user_id} account updated successfully. New balance: #{updated_user.balance}")
+    case MyBroadwayApp.UserStorage.get_user(event.user_id) do
+      {:ok, user} ->
+        IO.puts("User ID: #{user.id}, Balance: #{user.balance}, Email: #{user.email}")
+        handle_user(user, balance_change)
 
-      if updated_user.balance >= 100 do
-        send_email(updated_user.email)
-        # After sending email, decrement the balance by 100
-        {:ok, updated_user_after_email} = MyBroadwayApp.UserStorage.update_user(event.user_id, updated_user.email, updated_user.balance - 100)
-        IO.puts("User #{event.user_id} has been sent an email. Balance decremented by 100. Current balance: #{updated_user_after_email.balance}")
-      else
-        IO.puts("User #{event.user_id} hasn't reached the required amount of credits yet. Current balance: #{updated_user.balance} points")
-      end
-    else
-      _ ->
-        IO.puts("Failed to retrieve or update user account.")
+      {:error, _reason} ->
+        IO.puts("Failed to retrieve user account.")
     end
+  end
+
+  defp handle_user(user, balance_change) do
+    IO.puts('Handling users account')
+
+    case update_user_balance(user, balance_change) do
+      {:ok, updated_user} ->
+        if updated_user.balance >= 100 do
+          send_email_and_update_balance(updated_user)
+        else
+          IO.puts("User #{user.id} hasn't reached the required amount of credits yet. Current balance: #{updated_user.balance} points")
+        end
+
+      {:error, reason} ->
+        IO.puts("Failed to update user balance: #{reason}")
+    end
+  end
+
+  defp update_user_balance(user, balance_change) do
+    new_balance = user.balance + balance_change
+
+    MyBroadwayApp.UserStorage.update_user(user.id, user.email, new_balance)
+  end
+
+  defp send_email_and_update_balance(user) do
+    case decrement_balance(user, 100) do
+      {:ok, updated_user} ->
+        IO.puts("User #{user.id} has been sent an email. Balance decremented by 100. Current balance: #{updated_user.balance}")
+
+      {:error, reason} ->
+        IO.puts("Failed to update user balance: #{reason}")
+    end
+
+    send_email(user.email)
+  end
+
+  defp decrement_balance(user, amount) do
+    new_balance = user.balance - amount
+    MyBroadwayApp.UserStorage.update_user(user.id, user.email, new_balance)
   end
 
   defp send_email(user_email) do

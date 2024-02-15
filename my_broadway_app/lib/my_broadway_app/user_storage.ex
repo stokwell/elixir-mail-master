@@ -59,7 +59,7 @@ defmodule MyBroadwayApp.UserStorage do
 
   def handle_call({:get_user, id}, _from, table_name) do
     case :ets.lookup(table_name, id) do
-      [{^id, user}] -> {:reply, {:ok, user}, table_name}
+      [{^id, user}] -> {:reply, {:ok, Map.put_new(user, :id, id)}, table_name}
       _ -> {:reply, :error, table_name}
     end
   end
@@ -69,7 +69,7 @@ defmodule MyBroadwayApp.UserStorage do
       [{^id, user}] ->
         updated_user = %{user | email: email, balance: balance}
         :ets.insert(table_name, {id, updated_user})
-        {:reply, {:ok, updated_user}, table_name}
+        {:reply, {:ok, Map.put_new(user, :id, id)}, table_name}
       _ -> {:reply, :error, table_name}
     end
   end

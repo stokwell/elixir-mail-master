@@ -16,7 +16,6 @@ defmodule MyBroadwayApp.Application do
     {:ok, nil}
   end
 
-
   defp get_or_generate_users do
     if MyBroadwayApp.UserStorage.get_all_users() == [] do
       IO.puts("Generating new users...")
@@ -28,7 +27,7 @@ defmodule MyBroadwayApp.Application do
     MyBroadwayApp.UserStorage.get_all_users()
   end
 
-  def generate_new_users do
+  defp generate_new_users do
     for _ <- 1..50 do
       id = :crypto.strong_rand_bytes(8) |> Base.encode16()
       first_name = Faker.Person.first_name()
@@ -51,7 +50,7 @@ defmodule MyBroadwayApp.Application do
     end)
     |> Enum.map(&Task.await/1)
 
-    IO.puts("Random events for 100 random users were published.")
+    IO.puts("Random events for 50 random users were published.")
 
     {:ok, nil}
   end
