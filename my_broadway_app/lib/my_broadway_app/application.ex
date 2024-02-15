@@ -22,12 +22,10 @@ defmodule MyBroadwayApp.Application do
     if users == [] do
       Logger.info("Generating new users...")
       generate_new_users()
-      ^users = MyBroadwayApp.UserStorage.get_all_users()
     else
       Logger.info("Users already generated.")
+      users
     end
-
-    users
   end
 
   defp generate_new_users do
@@ -39,6 +37,8 @@ defmodule MyBroadwayApp.Application do
       balance = 0
       MyBroadwayApp.UserStorage.add_user(id, email, balance)
     end)
+
+    MyBroadwayApp.UserStorage.get_all_users()
   end
 
   defp publish_events(users) do
