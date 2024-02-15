@@ -39,22 +39,17 @@ defmodule MyBroadwayApp.Application do
   end
 
   defp publish_events(users) do
-    # Run event handling tasks concurrently
     Enum.each(1..150, fn _ ->
-      Task.async(fn ->
-        random_user = Enum.random(users)
-        event = random_event(random_user.id)
-        IO.puts("User #{random_user.id} generated event: #{inspect(event)}")
-        MyBroadwayApp.EventHandler.handle_event(event)
-      end)
+      random_user = Enum.random(users)
+      event = random_event(random_user.id)
+      IO.puts("User #{random_user.id} generated event: #{inspect(event)}")
+      MyBroadwayApp.EventHandler.handle_event(event)
     end)
-    |> Enum.map(&Task.await/1)
 
-    IO.puts("Random events for 50 random users were published.")
+    IO.puts("150 random events for 50 random users were published.")
 
     {:ok, nil}
   end
-
 
   defp random_event(user_id) do
     events = [

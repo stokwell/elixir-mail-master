@@ -69,8 +69,10 @@ defmodule MyBroadwayApp.UserStorage do
       [{^id, user}] ->
         updated_user = %{user | email: email, balance: balance}
         :ets.insert(table_name, {id, updated_user})
-        {:reply, {:ok, Map.put_new(updated_user, :id, id)}, table_name}
-      _ -> {:reply, :error, table_name}
+        updated_user_with_id = Map.put_new(updated_user, :id, id)
+        {:reply, {:ok, updated_user_with_id}, table_name}
+      _ ->
+        {:reply, :error, table_name}
     end
   end
 
