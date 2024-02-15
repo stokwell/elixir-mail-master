@@ -40,7 +40,7 @@ defmodule MyBroadwayApp.Application do
 
   defp publish_events(users) do
     # Run event handling tasks concurrently
-    Enum.each(1..120, fn _ ->
+    Enum.each(1..150, fn _ ->
       Task.async(fn ->
         random_user = Enum.random(users)
         event = random_event(random_user.id)

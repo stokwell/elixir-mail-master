@@ -36,7 +36,7 @@ defmodule MyBroadwayApp.EventHandler do
     case update_user_balance(user, balance_change) do
       {:ok, updated_user} ->
         if updated_user.balance >= 100 do
-          send_email_and_update_balance(updated_user)
+          send_email(updated_user.email)
         else
           IO.puts("User #{user.id} hasn't reached the required amount of credits yet. Current balance: #{updated_user.balance} points")
         end
@@ -49,23 +49,6 @@ defmodule MyBroadwayApp.EventHandler do
   defp update_user_balance(user, balance_change) do
     new_balance = user.balance + balance_change
 
-    MyBroadwayApp.UserStorage.update_user(user.id, user.email, new_balance)
-  end
-
-  defp send_email_and_update_balance(user) do
-    case decrement_balance(user, 100) do
-      {:ok, updated_user} ->
-        IO.puts("User #{user.id} has been sent an email. Balance decremented by 100. Current balance: #{updated_user.balance}")
-
-      {:error, reason} ->
-        IO.puts("Failed to update user balance: #{reason}")
-    end
-
-    send_email(user.email)
-  end
-
-  defp decrement_balance(user, amount) do
-    new_balance = user.balance - amount
     MyBroadwayApp.UserStorage.update_user(user.id, user.email, new_balance)
   end
 
