@@ -1,8 +1,8 @@
 defmodule MyBroadwayApp.Application do
   use Application
+  require Logger
 
   # MyBroadwayApp.Application.start(:normal, [])
-
   def start(_type, _args) do
     children = [
       MyBroadwayApp.UserStorage
@@ -17,14 +17,18 @@ defmodule MyBroadwayApp.Application do
   end
 
   defp get_or_generate_users do
-    if MyBroadwayApp.UserStorage.get_all_users() == [] do
-      IO.puts("Generating new users...")
-      generate_new_users()
-    else
-      IO.puts("Users already generated.")
+    users = MyBroadwayApp.UserStorage.get_all_users()
+
+    case users do
+      [] ->
+        Logger.info("Generating new users...")
+        generate_new_users()
+        ^users = MyBroadwayApp.UserStorage.get_all_users()
+      _ ->
+        Logger.info("Users already generated.")
     end
 
-    MyBroadwayApp.UserStorage.get_all_users()
+    users
   end
 
   defp generate_new_users do
@@ -39,14 +43,14 @@ defmodule MyBroadwayApp.Application do
   end
 
   defp publish_events(users) do
-    Enum.each(1..150, fn _ ->
+    Enum.each(1..100, fn _ ->
       random_user = Enum.random(users)
       event = random_event(random_user.id)
-      IO.puts("User #{random_user.id} generated event: #{inspect(event)}")
+      Logger.info("User #{random_user.id} generated event: #{inspect(event)}")
       MyBroadwayApp.EventHandler.handle_event(event)
     end)
 
-    IO.puts("150 random events for 50 random users were published.")
+    Logger.info("100 random events have been processed for 50 random users.")
 
     {:ok, nil}
   end
