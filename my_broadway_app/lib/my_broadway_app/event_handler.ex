@@ -18,11 +18,8 @@ defmodule MyBroadwayApp.EventHandler do
   end
 
   defp handle_finishing_event(event, balance_change) do
-    IO.puts("Handling #{event.__struct__.__name__} event for user #{event.user_id}")
-
     case MyBroadwayApp.UserStorage.get_user(event.user_id) do
       {:ok, user} ->
-        IO.puts("User ID: #{user.id}, Balance: #{user.balance}, Email: #{user.email}")
         handle_user(user, balance_change)
 
       {:error, _reason} ->
@@ -31,11 +28,10 @@ defmodule MyBroadwayApp.EventHandler do
   end
 
   defp handle_user(user, balance_change) do
-    IO.puts('Handling users account')
-
     case update_user_balance(user, balance_change) do
       {:ok, updated_user} ->
         if updated_user.balance >= 100 do
+          IO.puts("User #{updated_user.id} with balance: #{updated_user.balance} reached the required amount of 100 credits")
           send_email(updated_user.email)
         else
           IO.puts("User #{user.id} hasn't reached the required amount of credits yet. Current balance: #{updated_user.balance} points")
