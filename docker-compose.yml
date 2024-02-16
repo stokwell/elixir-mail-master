@@ -26,6 +26,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: mail_master_dev
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
   prometheus:
     image: prom/prometheus
@@ -33,3 +35,6 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
+
+volumes:
+  postgres-data: 
