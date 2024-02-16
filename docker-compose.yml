@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  my_broadway_app:
+    build:
+      context: ./my_broadway_app
+      dockerfile: Dockerfile
+
+  mail_master:
+    build:
+      context: ./mail_master
+      dockerfile: Dockerfile
+    command: mix phx.server
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=ecto://postgres:postgres@db/phoenix_dev
+
+  db:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mail_master_dev
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
