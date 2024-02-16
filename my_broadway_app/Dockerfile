@@ -25,7 +25,7 @@ COPY . .
 RUN mix compile
 
 # Expose any ports your application may need
-EXPOSE 4000
+EXPOSE 3000
 
 # Command to run the application
 CMD ["mix", "run", "--no-halt"]

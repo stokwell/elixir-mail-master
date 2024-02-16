@@ -1,6 +1,11 @@
 # Use the official Elixir image as a base
 FROM elixir:1.16.0
 
+# Install inotify-tools
+RUN apt-get update && \
+    apt-get install -y inotify-tools && \
+    rm -rf /var/lib/apt/lists/*
+
 # Set the working directory
 WORKDIR /app
 
