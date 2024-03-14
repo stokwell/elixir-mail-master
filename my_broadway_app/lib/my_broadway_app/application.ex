@@ -5,7 +5,8 @@ defmodule MyBroadwayApp.Application do
   # MyBroadwayApp.Application.start(:normal, [])
   def start(_type, _args) do
     children = [
-      MyBroadwayApp.UserStorage
+      MyBroadwayApp.UserStorage,
+      {MyBroadwayApp.EventPublisher, []}
     ]
 
     opts = [strategy: :one_for_one, name: MyBroadwayApp.Supervisor]
@@ -46,7 +47,7 @@ defmodule MyBroadwayApp.Application do
       random_user = Enum.random(users)
       event = random_event(random_user.id)
       Logger.info("User #{random_user.id} generated event: #{inspect(event)}")
-      MyBroadwayApp.EventHandler.handle_event(event)
+      MyBroadwayApp.EventPublisher.publish_event("important_events", event)
     end)
 
     Logger.info("100 random events have been processed for 50 random users.")

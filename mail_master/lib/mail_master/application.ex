@@ -17,7 +17,9 @@ defmodule MailMaster.Application do
       # Start a worker by calling: MailMaster.Worker.start_link(arg)
       # {MailMaster.Worker, arg},
       # Start to serve requests, typically the last entry
-      MailMasterWeb.Endpoint
+      MailMasterWeb.Endpoint,
+      {MailMaster.RabbitHole.EventsMashine.EventsPublisher, []},
+      {MailMaster.RabbitHole.MyBroadway.Pipeline, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

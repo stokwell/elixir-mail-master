@@ -1,0 +1,1 @@
+CREATE DATABASE mail_master_dev;

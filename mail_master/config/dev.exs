@@ -62,6 +62,9 @@ config :mail_master, MailMasterWeb.Endpoint,
     ]
   ]
 
+config :mail_master, MailMaster.MyMailer,
+  adapter: Bamboo.LocalAdapter
+
 # Enable dev routes for dashboard and mailbox
 config :mail_master, dev_routes: true
 

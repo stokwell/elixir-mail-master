@@ -6,20 +6,23 @@ services:
     ports:
       - "80:80" 
 
-  my_broadway_app:
-    build:
-      context: ./my_broadway_app
-      dockerfile: Dockerfile
-
   mail_master:
     build:
       context: ./mail_master
       dockerfile: Dockerfile
+    stdin_open: true
+    tty: true
+    environment:
+      MIX_ENV: dev
+    volumes:
+      - ./mail_master:/app
     command: mix phx.server
     ports:
       - "4000:4000"
     depends_on:
       - db
+      - rabbitmq
+    restart: on-failure
 
   db:
     image: postgres:16
@@ -32,12 +35,43 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
+  postgres_exporter:
+    image: wrouesnel/postgres_exporter:v0.7.0
+    ports:
+      - '9187:9187'
+    depends_on:
+      - db
+    environment:
+      DATA_SOURCE_USER: postgres
+      DATA_SOURCE_PASS: postgres
+      DATA_SOURCE_URI: postgres:5432/?sslmode=disable
+
+  rabbitmq:
+    image: rabbitmq:3.9.9-management
+    ports:
+      - "5672:5672" 
+      - "15672:15672" 
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest" 
+      RABBITMQ_DEFAULT_PASS: "guest" 
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
   prometheus:
-    image: prom/prometheus
+    image: prom/prometheus:v2.13.0
+    ports:
+      - '9090:9090'
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/config.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
 
 volumes:
   postgres-data: 
+  prometheus-data:
+  rabbitmq_data:
+    driver: local

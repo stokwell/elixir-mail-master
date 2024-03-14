@@ -2,8 +2,8 @@
 FROM elixir:1.16
 
 # Set environment variables for the build
-ENV MIX_ENV=prod \
-    LANG=C.UTF-8
+# ENV MIX_ENV=prod \
+#     LANG=C.UTF-8
 
 # Install hex package manager and rebar
 RUN mix local.hex --force && \
@@ -24,8 +24,15 @@ COPY . .
 # Compile the application
 RUN mix compile
 
-# Expose any ports your application may need
-EXPOSE 3000
+# # Expose any ports your application may need
+# EXPOSE 3000
 
-# Command to run the application
-CMD ["mix", "run", "--no-halt"]
+# # Command to run the application
+# CMD ["mix", "run", "--no-halt"]
+
+# Set environment variables for debugging (optional)
+ENV MIX_ENV=dev
+ENV ERL_FLAGS="-kernel shell_history enabled"
+
+# Start the application in development mode (optional)
+CMD ["iex", "-S", "mix"]

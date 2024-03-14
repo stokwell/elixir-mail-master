@@ -21,12 +21,14 @@ defmodule MyBroadwayApp.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:broadway, "~> 1.0"},
+      {:amqp, "~> 3.3"},
       {:faker, "~> 0.17.0"},
-      {:telemetry, "~> 1.0"}
-
-      # {:dep_from_hexpm, "~> 0.3.0"},
-      # {:dep_from_git, git: "https://github.com/elixir-lang/my_dep.git", tag: "0.1.0"}
+      {:telemetry, "~> 1.0"},
+      {:broadway, "~> 1.0"},
+      {:broadway_rabbitmq, "~> 0.7"},
+      {:ecto_sql, "~> 3.0"},
+      {:postgrex, ">= 0.0.0"},
+      {:gen_rmq, "~> 2.3.0"}
     ]
   end
 end

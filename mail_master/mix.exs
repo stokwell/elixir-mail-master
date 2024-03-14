@@ -57,7 +57,12 @@ defmodule MailMaster.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
-      {:bandit, "~> 1.2"}
+      {:bandit, "~> 1.2"},
+      {:faker, "~> 0.17.0"},
+      {:broadway, "~> 1.0"},
+      {:broadway_rabbitmq, "~> 0.7"},
+      {:bamboo, "~> 2.3.0"},
+      {:ecto_psql_extras, "~> 0.6"},
     ]
   end
 

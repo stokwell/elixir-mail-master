@@ -15,7 +15,7 @@ alias MailMaster.User
 import NaiveDateTime, only: [truncate: 2]
 
 # Generate 10 users with fake names and emails
-users = Enum.map(1..1000, fn _ ->
+users = Enum.map(1..1000000, fn _ ->
   %{
     first_name: Faker.Person.first_name(),
     last_name: Faker.Person.last_name(),

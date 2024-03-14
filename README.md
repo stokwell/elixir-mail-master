@@ -14,3 +14,19 @@ Currently, the application utilizes `:ets` for storing user information such as 
 
 Lastly, explore deployment options for your Elixir application. Check out this [video](https://www.youtube.com/watch?v=i_k8VaiqjiM) by Tyler Pachal on deploying Elixir applications to container orchestrators using Docker for inspiration and guidance.
 
+
+## Materials
+
+Creating Note taking app using LiveView and GenServer - Part 1  https://abulasar.com/creating-note-taking-app-using-liveview-and-genserver-part-1
+
+Implementing AMQP in an Elixir Application https://medium.com/caspertechteam/implementing-amqp-in-an-elixir-application-20734635436
+
+https://medium.com/@r_trojanowski/working-with-a-huge-dataset-with-elixir-and-phoenix-94875e4169a5
+
+https://github.com/aifrak/concurrent-data-processing-in-elixir/tree/main/tickets/lib
+
+https://akoutmos.com/post/broadway-rabbitmq-and-the-rise-of-elixir/
+
+
+https://medium.com/@pragprog/processing-ticketing-events-883fabf21605
+

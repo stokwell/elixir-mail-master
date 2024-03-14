@@ -10,4 +10,9 @@ defmodule MailMaster.User do
 
     timestamps()
   end
+
+  def changeset(user, attrs) do
+    user
+    |> Ecto.Changeset.cast(attrs, [:username, :first_name, :last_name, :balance])
+  end
 end
